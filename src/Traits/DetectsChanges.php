@@ -65,10 +65,6 @@ trait DetectsChanges
                 : $this
         );
 
-        if (isset(static::$logExtraAttributes)) {
-            $properties['attributes'] = array_merge($properties['attributes'], static::$logExtraAttributes);
-        }
-
         if (static::eventsToBeRecorded()->contains('updated') && $processingEvent == 'updated') {
             $nullProperties = array_fill_keys(array_keys($properties['attributes']), null);
 
@@ -86,6 +82,10 @@ trait DetectsChanges
             $properties['old'] = collect($properties['old'])
                 ->only(array_keys($properties['attributes']))
                 ->all();
+        }
+
+        if (isset(static::$logExtraAttributes)) {
+            $properties['extra_attributes'] = static::$logExtraAttributes;
         }
 
         return $properties;
